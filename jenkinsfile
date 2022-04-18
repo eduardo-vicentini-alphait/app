@@ -10,7 +10,7 @@ pipeline {
         registry = 'https://registry.hub.docker.com'
         repository = 'versoview/versoview-user'
         ENVIRONMENT = "dev"
-        APP_NAME = "test"
+        APP_NAME = "test-eduardo"
         aws_region = "ap-southeast-1"
         aws_access_key_id = credentials('aws_access_key_id')
         aws_secret_access_key = credentials('aws_secret_access_key')
