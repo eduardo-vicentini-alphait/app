@@ -1,0 +1,104 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: user-versoview-ns-dev
+spec:
+  selector:
+    matchLabels:
+      app: user
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user
+        image: ${repository}:${IMAGE_TAG}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 2469
+        env:
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mongodb_uri
+            - name: MAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mail_host
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: port
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mail_port
+            - name: MAIL_ENCRYPTION
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mail_encryption
+            - name: MAIL_FROM_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mail_from_address
+            - name: MAIL_FROM_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: mail_from_name
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: app_secret
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mail_username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mail_password
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /HealthCheck
+            port: 2469
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /HealthCheck
+            port: 2469
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 3
+      imagePullSecrets:
+        - name: regcred  

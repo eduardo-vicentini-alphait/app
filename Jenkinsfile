@@ -8,7 +8,7 @@ pipeline {
         BRANCH_NAME = "${GIT_BRANCH.split('/').size() > 1 ? GIT_BRANCH.split('/')[1..-1].join('/') : GIT_BRANCH}"
         IMAGE_TAG = "${BRANCH_NAME}_${env.BUILD_ID}"
         registry = 'https://registry.hub.docker.com'
-        repository = 'versoview/versoview-user'
+        repository = 'versoview/versoview-test'
         ENVIRONMENT = "dev"
         APP_NAME = "test-eduardo"
         aws_region = "ap-southeast-1"
@@ -42,7 +42,7 @@ pipeline {
             }
             }
            steps {
-               checkout([$class: 'GitSCM', branches: [[name: '*/dev-master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GT_PAT', url: 'https://github.com/Alpha-TechUSA/versoview_users.git']]])
+               checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GT_PAT', url: 'https://github.com/eduardo-vicentini-alphait/app.git']]])
                withCredentials([kubeconfigFile(credentialsId: "${ENVIRONMENT}_eks_kubeconfig", variable: 'KUBECONFIG')]) {
                     sh "aws configure set aws_access_key_id ${aws_access_key_id}"
                     sh "aws configure set aws_secret_access_key ${aws_secret_access_key}"
@@ -51,8 +51,8 @@ pipeline {
                     sh "echo ${KUBECONFIG} > ~/.kube/config"
                     sh "kubectl get nodes"
                     sh "echo ${repository}:${IMAGE_TAG}"
-                    sh "kubectl apply -f k8s-manifests/${ENVIRONMENT}/ingress.yml -f k8s-manifests/${ENVIRONMENT}/configmap.yml -f k8s-manifests/${ENVIRONMENT}/secrets.yml -f k8s-manifests/${ENVIRONMENT}/service.yml"
-                    sh "envsubst < k8s-manifests/${ENVIRONMENT}/deployment.yml | kubectl apply -f -"
+                    sh "kubectl apply -f /${ENVIRONMENT}/ingress.yml -f /${ENVIRONMENT}/configmap.yml -f /${ENVIRONMENT}/secrets.yml -f /${ENVIRONMENT}/service.yml"
+                    sh "envsubst < /${ENVIRONMENT}/deployment.yml | kubectl apply -f -"
                     sh "kubectl rollout status deployment ${APP_NAME}-deployment -n user-versoview-ns-${ENVIRONMENT}"
                 }
            }

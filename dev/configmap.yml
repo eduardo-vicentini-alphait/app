@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+  namespace: user-versoview-ns-dev
+data:
+  mongodb_uri: mongodb+srv://vvalpha:Alpha704@cluster0.h12of.mongodb.net/versoview?retryWrites=true&w=majority
+  port: "2469"
+  mail_host: smtp-mail.outlook.com
+  mail_port: "587"
+  mail_encryption: starttls
+  mail_from_address: versoview.user@alphait.us
+  mail_from_name: no-reply

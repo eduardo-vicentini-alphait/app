@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-user-versoview
+  namespace: user-versoview-ns-dev
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+      - "user.dev.versoview.us"
+      secretName: user-secret-tls
+  rules:
+  - host: user.dev.versoview.us
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: user-service
+          servicePort: 2469
