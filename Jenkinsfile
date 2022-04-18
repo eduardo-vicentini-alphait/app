@@ -51,8 +51,8 @@ pipeline {
                     sh "echo ${KUBECONFIG} > ~/.kube/config"
                     sh "kubectl get nodes"
                     sh "echo ${repository}:${IMAGE_TAG}"
-                    sh "kubectl apply -f /app/${ENVIRONMENT}/ingress.yml -f /app/${ENVIRONMENT}/configmap.yml -f /app/${ENVIRONMENT}/secrets.yml -f /app/${ENVIRONMENT}/service.yml"
-                    sh "envsubst < /app/${ENVIRONMENT}/deployment.yml | kubectl apply -f -"
+                    sh "kubectl apply -f ${ENVIRONMENT}/ingress.yml -f ${ENVIRONMENT}/configmap.yml -f ${ENVIRONMENT}/secrets.yml -f ${ENVIRONMENT}/service.yml"
+                    sh "envsubst < ${ENVIRONMENT}/deployment.yml | kubectl apply -f -"
                     sh "kubectl rollout status deployment ${APP_NAME}-deployment -n user-versoview-ns-${ENVIRONMENT}"
                 }
            }
