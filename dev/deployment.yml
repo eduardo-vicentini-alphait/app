@@ -55,27 +55,7 @@ spec:
                 configMapKeyRef:
                   name: configmap
                   key: mail_from_address
-            - name: MAIL_FROM_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: configmap
-                  key: mail_from_name
-            - name: APP_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: app_secret
-            - name: MAIL_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: mail_username
-            - name: MAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: mail_password
-        resources:
+         resources:
           requests:
             memory: "64Mi"
             cpu: "250m"
