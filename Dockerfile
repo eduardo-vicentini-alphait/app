@@ -1,13 +1,6 @@
-FROM node
-
-WORKDIR /app/users
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-EXPOSE 8001
-
-CMD ["npm", "start"]
+FROM openjdk:8-jdk-alpine
+ENV PORT 8080
+EXPOSE 8080
+COPY target/*.jar /opt/app.jar
+WORKDIR /opt
+CMD ["java", "-jar", "app.jar"]
