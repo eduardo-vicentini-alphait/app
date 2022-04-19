@@ -53,7 +53,7 @@ pipeline {
                     sh "echo ${repository}:${IMAGE_TAG}"
                     sh "kubectl apply -f ${ENVIRONMENT}/service.yml"
                     sh "envsubst < ${ENVIRONMENT}/deployment.yml | kubectl apply -f -"
-                    sh "kubectl rollout status deployment ${APP_NAME}-deployment -n user-versoview-ns-${ENVIRONMENT}"
+                    sh "kubectl rollout status deployment ${APP_NAME} -n user-versoview-ns-${ENVIRONMENT}"
                 }
            }
        }
